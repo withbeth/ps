@@ -1,4 +1,21 @@
 class Solution(object):
+
+    def quick_sorted(self, arr):
+        if len(arr) > 1:
+            pivot = arr[len(arr) - 1]
+            left, mid, right = [], [], []
+            for i in range(len(arr) - 1):
+                if arr[i] < pivot:
+                    left.append(arr[i])
+                elif arr[i] > pivot:
+                    right.append(arr[i])
+                else:
+                    mid.append(arr[i])
+            mid.append(pivot)
+            return self.quick_sorted(left) + mid + self.quick_sorted(right)
+        else:
+            return arr
+
     def findAnagrams(self, s, p):
         """
         :type s: str
@@ -7,34 +24,20 @@ class Solution(object):
         """
         # Set up seq
         result = []
-        words_seq = []
-        sentence_seq = []
-        for c in p.strip():
-            words_seq.append(c)
-        for c in s.strip():
-            sentence_seq.append(c)
-        words_checked = [False] * len(words_seq)
+        words_seq = [c for c in p.strip()]
+        sentence_seq = [c for c in s.strip()]
 
         # Verify pre-condition
         if len(sentence_seq) - len(words_seq) <= 0:
             return result
 
         for idx in range(0, len(sentence_seq) - len(words_seq) + 1):
-            # Check whether following window seq satisfies Anagram condition
-            window = sentence_seq[idx: idx + len(words_seq)]
-            for w in window:
-                if w in words_seq :
-                    i = words_seq.index(w)
-                    if i and words_checked[i] is False:
-                        words_checked[i] = True
-                        if len(words_seq) == sum(words_checked):
-                            result.append(idx)
-        return result
+            # Check whether following sub seq satisfies Anagram condition
+            sub_seq = sentence_seq[idx: idx + len(words_seq)]
+            if self.quick_sorted(sub_seq) == self.quick_sorted(words_seq) :
+                result.append(idx)
 
-if __name__ == '__main__':
-    solution = Solution()
-    file = open("test_case3")
-    print solution.findAnagrams(file.readline(), file.readline())
+        return result
 
 
 
