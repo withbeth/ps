@@ -1,21 +1,5 @@
 class Solution(object):
 
-    def quick_sorted(self, arr):
-        if len(arr) > 1:
-            pivot = arr[len(arr) - 1]
-            left, mid, right = [], [], []
-            for i in range(len(arr) - 1):
-                if arr[i] < pivot:
-                    left.append(arr[i])
-                elif arr[i] > pivot:
-                    right.append(arr[i])
-                else:
-                    mid.append(arr[i])
-            mid.append(pivot)
-            return self.quick_sorted(left) + mid + self.quick_sorted(right)
-        else:
-            return arr
-
     def findAnagrams(self, s, p):
         """
         :type s: str
@@ -27,23 +11,46 @@ class Solution(object):
         words_seq = [c for c in p.strip()]
         sentence_seq = [c for c in s.strip()]
 
-        # Verify pre-condition
-        if len(sentence_seq) - len(words_seq) <= 0:
+        # Verify pre-conditions
+        if len(sentence_seq) == 0 or len(words_seq) == 0:
+            return result
+        elif len(sentence_seq) - len(words_seq) <= 0:
             return result
 
+        # Set up caches
+        words_freq_cache = {}
+        for c in p.strip():
+            if c in words_freq_cache:
+                words_freq_cache[c] += 1
+            else:
+                words_freq_cache[c] = 1
+
+        window_freq_cache = {}
+        for c in sentence_seq[:len(words_seq) - 1]:
+            if c in window_freq_cache:
+                window_freq_cache[c] += 1
+            else:
+                window_freq_cache[c] = 1
+
+        # Iterate
         for idx in range(0, len(sentence_seq) - len(words_seq) + 1):
-            # Check whether following sub seq satisfies Anagram condition
-            sub_seq = sentence_seq[idx: idx + len(words_seq)]
-            if self.quick_sorted(sub_seq) == self.quick_sorted(words_seq):
+
+            window = sentence_seq[idx:idx + len(words_seq)]
+
+            # Cache last index one
+            if window_freq_cache.has_key(window[-1]):
+                window_freq_cache[window[-1]] += 1
+            else:
+                window_freq_cache[window[-1]] = 1
+
+            # Check anagram condition
+            if words_freq_cache == window_freq_cache:
                 result.append(idx)
 
+            # Decrease first index count since window will be shifting RIGHT
+            window_freq_cache[window[0]] -= 1
+            if window_freq_cache[window[0]] == 0:
+                del window_freq_cache[window[0]]
+
         return result
-
-
-
-
-
-
-
-
 
