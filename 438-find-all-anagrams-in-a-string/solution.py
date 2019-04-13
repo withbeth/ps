@@ -34,7 +34,7 @@ class Solution(object):
         for idx in range(0, len(sentence_seq) - len(words_seq) + 1):
             # Check whether following sub seq satisfies Anagram condition
             sub_seq = sentence_seq[idx: idx + len(words_seq)]
-            if self.quick_sorted(sub_seq) == self.quick_sorted(words_seq) :
+            if self.quick_sorted(sub_seq) == self.quick_sorted(words_seq):
                 result.append(idx)
 
         return result
