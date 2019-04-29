@@ -1,39 +1,37 @@
 #! /bin/python
+class Solution(object):
 
+    # Constraint
+    # list1, list2 can have duplicated elements
+    def intersect(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        if nums1 == nums2:
+            return nums1
+        if len(nums1) == 0 or len(nums2) == 0:
+            return []
+        return self.f(nums1, nums2)
 
-# Constraint
-# list1, list2 can have duplicated elements
-def intersect(nums1, nums2):
-    """
-    :type nums1: List[int]
-    :type nums2: List[int]
-    :rtype: List[int]
-    """
-    xs = sorted(nums1)
-    ys = sorted(nums2)
-    if xs == ys:
-        return xs
-    if len(xs) == 0 or len(ys) == 0:
-        return []
-    if len(xs) > len(ys):
-        return get_intersection(ys, xs)
-    return get_intersection(xs, ys)
+    def f(self, xs, ys):
+        # Key: element, Val : Count
+        counts = {}
 
+        def cache(x):
+            if x in counts:
+                counts[x] += 1
+            else:
+                counts[x] = 1
 
-def get_intersection(ss, ls):
-    """
-    :param ss: short seq
-    :param ls: long seq
-    :return: intersected elements list
-    """
-    def remove_and_return_elem_if_exists(s):
-        if s in ls:
-            ls.pop(ls.index(s))
-            return s
-        return None
-    return filter(lambda x: x is not None, map(remove_and_return_elem_if_exists, ss))
+        def consume(y):
+            if y in counts:
+                counts[y] -= 1
+                if counts[y] == 0:
+                    del counts[y]
+                return y
+            return None
 
-
-
-
-
+        map(cache, xs)
+        return filter(lambda e: e is not None, map(consume, ys))
