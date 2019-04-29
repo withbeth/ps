@@ -16,22 +16,21 @@ class Solution(object):
         return self.f(nums1, nums2)
 
     def f(self, xs, ys):
+        res = []
         # Key: element, Val : Count
         counts = {}
-
-        def cache(x):
+        # Cache
+        for x in xs:
             if x in counts:
                 counts[x] += 1
             else:
                 counts[x] = 1
-
-        def consume(y):
+        # Consume
+        for y in ys:
             if y in counts:
+                res.append(y)
                 counts[y] -= 1
                 if counts[y] == 0:
                     del counts[y]
-                return y
-            return None
+        return res
 
-        map(cache, xs)
-        return filter(lambda e: e is not None, map(consume, ys))
