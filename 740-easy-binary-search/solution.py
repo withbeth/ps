@@ -5,14 +5,10 @@ class Solution(object):
         :type target: int
         :rtype: int - index of the given target if target exists. otherwise return -1
         """
-        if len(nums) == 0:
-            return -1
         l = 0
         r = len(nums) - 1
         while l <= r:
             m = (l + r) // 2
-            assert l <= m
-            assert m <= r
             if nums[m] == target:
                 return m
             elif nums[m] < target:
