@@ -1,4 +1,5 @@
 class Solution(object):
+
     def search(self, nums, target):
         """
         :type nums: List[int] - sorted(in ascending order)
@@ -8,17 +9,16 @@ class Solution(object):
         l = 0
         r = len(nums) - 1
         while l <= r:
-            m = (l + r) // 2
+            m = (l + r) / 2
             if nums[m] == target:
                 return m
             elif nums[m] < target:
-                # Only update left
+                # Update left index only
                 l = m + 1
             else:
-                # Only update right
+                # Update right index only
                 r = m - 1
         return -1
-
 
     def contains(self, nums, target):
         """
