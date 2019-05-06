@@ -1,5 +1,4 @@
 #! /bin/python
-from Queue import Queue
 
 
 class Solution(object):
@@ -14,43 +13,44 @@ class Solution(object):
         if not board or len(board[0]) == 0:
             return False
 
+        def is_in_board(current):
+            i, j = current
+            r = len(board[0])
+            c = len(board)
+            return 0 <= i < c and 0 <= j < r
+
+        def get_possible_subtrees(current, next_letters):
+            if len(next_letters) == 0:
+                return []
+            i, j = current
+            return [(x, y)
+                    for x, y
+                    in [(i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)]
+                    if is_in_board((x, y)) and board[x][y] == next_letters[0]]
+
+        def dfs(current, next_letters):
+            i, j = current
+            if not next_letters:
+                return True
+
+            # Avoid visiting again
+            origin, board[i][j] = board[i][j], '*'
+
+            found = False
+            for nxt in get_possible_subtrees(current, next_letters):
+                if dfs(nxt, next_letters[1:]):
+                    found = True
+                    break
+
+            # Re-set
+            board[i][j] = origin
+            return found
+
+
         for start in self.letter2rc(word[0], board):
-            if self.dfs(start, word, board):
+            if dfs(start, word[1:]):
                 return True
         return False
-
-    def dfs(self, current_rc, remaining_letters, board):
-        if len(remaining_letters) == 0:
-            return True
-        if not self.is_in_board(current_rc, board) \
-                or not self.rc2letter(current_rc, board) == remaining_letters[0]:
-            return False
-
-        # Avoid visiting again
-        board[current_rc[0]][current_rc[1]] = '*'
-
-        # Sum result(True, False) of traversing sub-tree candidates
-        subtree_res = reduce(lambda t, c: t + c,
-                             map(lambda nxt: self.dfs(nxt, remaining_letters[1:], board),
-                                 self.get_subtree_candidates(current_rc)))
-        # Re-set
-        board[current_rc[0]][current_rc[1]] = remaining_letters[0]
-
-        return subtree_res
-
-    def is_in_board(self, current, board):
-        i, j = current
-        r = len(board[0])
-        c = len(board)
-        return 0 <= i < c and 0 <= j < r
-
-    def get_subtree_candidates(self, current):
-        i, j = current
-        return [(i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)]
-
-    def rc2letter(self, coord, board):
-        i, j = coord
-        return board[i][j]
 
     def letter2rc(self, letter, board):
         for i, j, other in self.iter_board(board):
