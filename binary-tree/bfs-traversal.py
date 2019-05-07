@@ -1,4 +1,5 @@
 from Queue import Queue
+# refer : https://leetcode.com/problems/binary-tree-level-order-traversal/
 # Definition for a binary tree node.
 # class TreeNode(object):
 #     def __init__(self, x):
@@ -6,17 +7,15 @@ from Queue import Queue
 #         self.left = None
 #         self.right = None
 
+
 class Solution(object):
+
     def levelOrder(self, root):
         """
         :type root: TreeNode
         :rtype: List[List[int]]
         """
-        pass
-
-    def dfs(self, node, curr_lv, max_lv):
-        pass
-
+        return self.iterative_level_order(root)
 
     def iterative_level_order(self, root):
         """
