@@ -15,7 +15,23 @@ class Solution(object):
         :type root: TreeNode
         :rtype: List[List[int]]
         """
-        return self.iterative_level_order(root)
+        levels = []
+
+        def recursive_level_order(node, lv):
+            # Most important thing : Top-Down is all about updating...
+            # We know the lv of the root node
+            # For each node, if we know the lv of the node, we will know the lv of its children.
+            if node is None:
+                return
+            if len(levels) == lv:
+                levels.append([])
+            levels[lv].append(node.val)
+
+            recursive_level_order(node.left, lv + 1)
+            recursive_level_order(node.right, lv + 1)
+
+        recursive_level_order(root, 0)
+        return levels
 
     def iterative_level_order(self, root):
         """
