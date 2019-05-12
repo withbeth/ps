@@ -39,7 +39,23 @@ class Solution(object):
             self.counter += is_left_uni_val & is_right_uni_val
             return is_left_uni_val & is_right_uni_val
 
-        is_unival_subtree(root)
+        def is_unival_subtree_using_top_down(node, parent_val):
+            # Leaf node case
+            if node is None:
+                return True
+            # Check if CHILDREN are unival subtrees or not
+            is_left_uni_val = is_unival_subtree_using_top_down(node.left, node.val)
+            is_right_uni_val = is_unival_subtree_using_top_down(node.right, node.val)
+            if not is_left_uni_val or not is_right_uni_val:
+                return False
+            self.counter += 1
+            # Check if CURRENT node has a unival value or not by comparing the val of parent node
+            return node.val == parent_val
+
+        #is_unival_subtree(root)
+        if root is None:
+            return 0
+        is_unival_subtree_using_top_down(root, -1)
         return self.counter
 
 
